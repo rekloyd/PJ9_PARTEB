@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Web Component</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+    <style>
+        .contenido {
+            display: none;
+        }
+        .contenido.mostrar {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <web-component></web-component>
+    </div>
+
+    <script>
+        const { createApp, defineCustomElement } = Vue;
+
+        const WebComponent = defineCustomElement({
+            template: `
+                <div>
+                    <button @click="mostrarContenido('mapa')">Mostrar Mapa</button>
+                    <button @click="mostrarContenido('grafico')">Mostrar Gráfico</button>
+                    
+                    <div id="mapa" :class="{ 'contenido': true, 'mostrar': contenidoVisible === 'mapa' }">
+                        <h2>Mapa</h2>
+                        <p>Aquí va el contenido del mapa.</p>
+                    </div>
+                    
+                    <div id="grafico" :class="{ 'contenido': true, 'mostrar': contenidoVisible === 'grafico' }">
+                        <h2>Gráfico</h2>
+                        <p>Aquí va el contenido del gráfico.</p>
+                    </div>
+                </div>
+            `,
+            data() {
+                return {
+                    contenidoVisible: ''
+                };
+            },
+            methods: {
+                mostrarContenido(id) {
+                    this.contenidoVisible = id;
+                }
+            }
+        });
+
+        customElements.define('web-component', WebComponent);
+
+        createApp({}).mount("#app");
+    </script>
+</body>
+</html>
