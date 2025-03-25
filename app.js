@@ -32,6 +32,7 @@ app.get('/contact', (req, res) => {
 });
 
 app.get('/graficas',(req,res)=>{
+  res.sendFile(path.join(__dirname, 'public', 'graficas.html'));
   
 })
 
