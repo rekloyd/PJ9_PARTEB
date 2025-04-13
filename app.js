@@ -4,7 +4,12 @@ const https = require('https');
 const path = require('path');
 const { mongoose, User, Post } = require('./mongoose.js');
 
-//openssl req -nodes -new -x509 -keyout certs/key.pem -out certs/cert.pem
+
+//openssl req -nodes -new -x509 -days 365 -keyout certs/key.pem -out certs/cert.pem
+//npm install pug
+//npm install mongoose
+
+
 
 const app = express();
 const PORT = 443;
