@@ -18,6 +18,9 @@ const options = {
   cert: fs.readFileSync('certs/cert.pem')
 };
 
+// Configurar carpeta de archivos estáticos (CSS, imágenes, JS)
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

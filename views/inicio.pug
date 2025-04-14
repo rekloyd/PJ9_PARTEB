@@ -1,0 +1,50 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Populus
+    link(rel="shortcut icon", href="../img/logo.png", type="image/x-icon")
+    link(rel="stylesheet", href="./styles.css")
+    link(rel="preconnect", href="https://fonts.googleapis.com")
+    link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
+    link(href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap", rel="stylesheet")
+
+  body
+    nav
+      .nav-container
+        a(href="/inicio")
+          img(src="../img/logo-nav.png", alt="Logo")
+        ul.nav-enlaces
+          li
+            a(href="/graficas") Gráfico
+          li
+            a(href="/quizz") Quizz
+          li
+            a(href="/about") Sobre Nosotros
+          li
+            a(href="/contacto") Contacto
+        .logout
+          a(href="/auth/logout") Log out
+
+    h1 ¡Bienvenido a Populus!
+    br
+    h3(style="text-align: center;") Navega libremente por la página, como si estuvieras en casa.
+
+    img(src="./img/banner.jpg", alt="banner", style="width: 100%; height: auto")
+    br
+
+    footer.footer-container
+      .footer-enlaces
+        p Copyright &copy; Todos los derechos reservados a Populus 2024
+        .footer-enlaces
+          a(href="/inicio", style="color: blue;") Inicio
+          a(href="/cookies") Política de Cookies
+          a(href="/terminos") Términos y Condiciones
+          a(href="/contacto") Contacto
+          a(href="/about") Sobre Nosotros
+        .footer-info
+          p Teléfono: +34 123 456 789
+          p Email: 
+            a(href="mailto:populus@worldwide.net") populous@worldwide.net
+          p Dirección: Calle Ficticia 123, 08001 Barcelona, España
