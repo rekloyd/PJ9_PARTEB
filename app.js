@@ -23,13 +23,18 @@ const options = {
 // Middleware para servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
+
 // Rutas
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.get('/about', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'about.html'));
+  res.render('about');
 });
 
 app.get('/contact', (req, res) => {
