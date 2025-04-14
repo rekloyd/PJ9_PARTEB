@@ -1,0 +1,212 @@
+html
+  head
+    title Gráficos Interactivos
+    style.
+      .grafico-container
+        display: none;
+        margin: 20px 0;
+        
+      .grafico-texto-contenedor
+        display: none;
+        margin-top: 10px;
+        font-size: 14px;
+        
+      .botones
+        margin: 20px 0;
+
+  body
+    div(class="botones")
+      button(onclick="mostrarGrafico('barras')") Gráfico de Barras
+      button(onclick="mostrarGrafico('progresion')") Gráfico de Progresión
+      button(onclick="mostrarGrafico('pastel')") Gráfico de Pastel
+
+    div(class="grafico-container" id="barras")
+      canvas(id="canvasBarras", width="600", height="400")
+      div(id="graficoBarrasTexto" class="grafico-texto-contenedor" style="display: none;")
+        p Texto relacionado con el gráfico de barras.
+
+    div(class="grafico-container" id="progresion")
+      canvas(id="canvasProgresion", width="600", height="400")
+      div(id="graficoProgresionTexto" class="grafico-texto-contenedor" style="display: none;")
+        p Texto relacionado con el gráfico de progresión.
+
+    div(class="grafico-container" id="pastel")
+      canvas(id="canvasPastel", width="400", height="400")
+      div(id="graficoPastelTexto" class="grafico-texto-contenedor" style="display: none;")
+        p Texto relacionado con el gráfico de pastel.
+
+    div(class="grafico-container" id="mapa")
+      canvas(id="canvasMapa", width="800", height="600")
+
+    script.
+      function mostrarGrafico(id) {
+        const contenedores = document.querySelectorAll('.grafico-container');
+        contenedores.forEach(contenedor => {
+          contenedor.style.display = (contenedor.id === id) ? 'block' : 'none';
+        });
+
+        if (id === "mapa") {
+          const canvas = document.getElementById("mapa");
+          if (canvas) {
+            canvas.style.display = "block";
+          }
+        }
+      }
+
+      function toggleTexto(id) {
+        const texto = document.getElementById(id);
+        const container = document.querySelector('.grafico-texto-contenedor');
+
+        if (texto.style.display === 'none' || texto.style.display === '') {
+          texto.style.display = 'block';
+          container.style.display = 'flex'; // Asegura que se muestren en línea
+        } else {
+          texto.style.display = 'none';
+          container.style.display = 'block'; // Vuelve a mostrar solo el gráfico
+        }
+      }
+
+      // Gráfico de barras
+      const canvasBarras = document.getElementById('canvasBarras');
+      const ctxBarras = canvasBarras.getContext('2d');
+      
+      const datosBarras = [50, 200, 300, 500, 700, 1200, 3000, 7000];
+      const etiquetasBarras = ['2000 a.C', '100 a.C', '711', '1492', '1789', '1850', '1960', '2010'];
+      const coloresBarras = ['#3357FF', '#3357FF','#3357FF', '#3357FF', '#3357FF','#3357FF','#3357FF','#3357FF'];
+
+      const anchoBarra = 40;
+      const espacioEntreBarras = 2.5;
+      const ejeX = 50;
+      const ejeY = canvasBarras.height - 50;
+      
+      const maxValorBarras = Math.max(...datosBarras);
+      const escalaBarras = (canvasBarras.height - 100) / maxValorBarras;
+
+      datosBarras.forEach((valor, index) => {
+        const altura = valor * escalaBarras;
+        const x = ejeX + (anchoBarra + espacioEntreBarras) * index;
+        const y = ejeY - altura;
+
+        ctxBarras.fillStyle = coloresBarras[index];
+        ctxBarras.fillRect(x, y, anchoBarra, altura);
+
+        ctxBarras.fillStyle = '#000';
+        ctxBarras.textAlign = 'center';
+        ctxBarras.fillText(etiquetasBarras[index], x + anchoBarra / 2, ejeY + 20);
+        ctxBarras.fillText(`${valor}M`, x + anchoBarra / 2, y - 10); // Muestra el número de millones
+      });
+
+      ctxBarras.beginPath();
+      ctxBarras.moveTo(ejeX - 10, ejeY);
+      ctxBarras.lineTo(canvasBarras.width - 10, ejeY);
+      ctxBarras.moveTo(ejeX, 0);
+      ctxBarras.lineTo(ejeX, ejeY + 10);
+      ctxBarras.stroke();
+
+      // Gráfico de progresión (proyección de población 2024-2080)
+      const canvasProgresion = document.getElementById('canvasProgresion').getContext('2d');
+      
+      canvasProgresion.clearRect(0, 0, canvasProgresion.canvas.width, canvasProgresion.canvas.height);
+      canvasProgresion.canvas.width = 500;
+      canvasProgresion.canvas.height = 400;
+
+      const dataProgresion = [
+        { year: 2024, population: 8000 },
+        { year: 2030, population: 8500 },
+        { year: 2050, population: 9500 },
+        { year: 2080, population: 10400 }
+      ];
+
+      const xStartProgresion = 50;
+      const yStartProgresion = 250;
+      const xGapProgresion = 100;
+      const yScaleProgresion = 0.081;
+
+      canvasProgresion.beginPath();
+      canvasProgresion.moveTo(xStartProgresion, yStartProgresion);
+      canvasProgresion.lineTo(xStartProgresion + 4 * xGapProgresion, yStartProgresion);
+      canvasProgresion.moveTo(xStartProgresion, yStartProgresion);
+      canvasProgresion.lineTo(xStartProgresion, 50);
+      canvasProgresion.strokeStyle = "#000000";
+      canvasProgresion.lineWidth = 2;
+      canvasProgresion.stroke();
+
+      canvasProgresion.font = "14px Arial";
+      canvasProgresion.fillStyle = "#000000";
+      dataProgresion.forEach((point, index) => {
+        canvasProgresion.fillText(point.year, xStartProgresion + index * xGapProgresion - 15, yStartProgresion + 20);
+      });
+
+      const yLabelsProgresion = [8000, 8500, 9000, 9500, 10000, 10400];
+      yLabelsProgresion.forEach((label, index) => {
+        const yPos = yStartProgresion - (label - 8000) * yScaleProgresion;
+        canvasProgresion.fillText(label, xStartProgresion - 40, yPos + 5);
+      });
+
+      canvasProgresion.beginPath();
+      canvasProgresion.moveTo(xStartProgresion, yStartProgresion - (dataProgresion[0].population - 8000) * yScaleProgresion);
+      dataProgresion.forEach((point, index) => {
+        const xPos = xStartProgresion + index * xGapProgresion;
+        const yPos = yStartProgresion - (point.population - 8000) * yScaleProgresion;
+        canvasProgresion.lineTo(xPos, yPos);
+      });
+
+      canvasProgresion.strokeStyle = "#FF5733";
+      canvasProgresion.lineWidth = 3;
+      canvasProgresion.stroke();
+
+      canvasProgresion.fillStyle = "#FF5733";
+      dataProgresion.forEach((point, index) => {
+        const xPos = xStartProgresion + index * xGapProgresion;
+        const yPos = yStartProgresion - (point.population - 8000) * yScaleProgresion;
+        canvasProgresion.beginPath();
+        canvasProgresion.arc(xPos, yPos, 5, 0, 2 * Math.PI);
+        canvasProgresion.fill();
+      });
+
+      // Gráfico de pastel (los 10 países más poblados del mundo)
+      const datosPastel = [
+        { pais: "India", porcentaje: 18.29 },
+        { pais: "China", porcentaje: 17.87 },
+        { pais: "EEUU", porcentaje: 4.27 },
+        { pais: "Indonesia", porcentaje: 3.57 },
+        { pais: "Pakistán", porcentaje: 2.99 },
+        { pais: "Nigeria", porcentaje: 2.89 },
+        { pais: "Brasil", porcentaje: 2.7 },
+        { pais: "Bangladesh", porcentaje: 2.19 },
+        { pais: "Rusia", porcentaje: 1.85 },
+        { pais: "México", porcentaje: 1.68 },
+      ];
+
+      const coloresPastel = [
+        "#FF5733", "#33FF57", "#5733FF", "#FFC300",
+        "#33FFF0", "#FF33E0", "#8E44AD", "#3498DB",
+        "#F1C40F", "#E67E22"
+      ];
+
+      const canvasPastel = document.getElementById("canvasPastel");
+      const ctxPastel = canvasPastel.getContext("2d");
+      const centroX = canvasPastel.width / 2;
+      const centroY = canvasPastel.height / 2;
+      const radio = 150;
+
+      const totalOriginal = datosPastel.reduce((sum, dato) => sum + dato.porcentaje, 0);
+      const factorEscala = 100 / totalOriginal;
+
+      const datosEscalados = datosPastel.map(dato => ({
+        ...dato,
+        porcentaje: dato.porcentaje * factorEscala,
+      }));
+
+      let anguloInicio = 0;
+      datosEscalados.forEach((dato, index) => {
+        const anguloFin = anguloInicio + (dato.porcentaje / 100) * 2 * Math.PI;
+        
+        ctxPastel.beginPath();
+        ctxPastel.moveTo(centroX, centroY);
+        ctxPastel.arc(centroX, centroY, radio, anguloInicio, anguloFin);
+        ctxPastel.fillStyle = coloresPastel[index];
+        ctxPastel.fill();
+
+        anguloInicio = anguloFin;
+      });
