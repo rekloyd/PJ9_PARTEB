@@ -4,8 +4,121 @@ html(lang="es")
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     title Blog
-    link(rel="stylesheet", href="./styles.css")
     script(src="https://unpkg.com/vue@3/dist/vue.global.js")
+    style.
+      /* Estilos para la página */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+
+      nav {
+        background-color: #f4f4f4;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      nav img {
+        height: 50px;
+        width: auto;
+      }
+
+      .nav-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-family: "Poppins", sans-serif;  
+        width: 100%;
+        padding: 15px;
+      }
+
+      .nav-enlaces {
+        list-style-type: none;
+        display: flex;
+        gap: 50px;
+        margin-left: auto;
+      }
+
+      .nav-enlaces li a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+        padding: 8px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .nav-enlaces li a:hover {
+        background-color: gray;
+        color: white;
+      }
+
+      .logout {
+        margin-left: auto;
+      }
+
+      .logout a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+        padding: 8px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .logout a:hover {
+        background-color: gray;
+        color: white;
+      }
+
+      /* Resto de estilos */
+      .main-container {
+        padding: 2rem;
+        background-color: #f8fafc;
+        min-height: 100vh;
+      }
+
+      .blog-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+      }
+
+      footer.footer-container {
+        background-color: #f4f4f4;
+        color: black;
+        padding: 20px;
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .footer-enlaces {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        justify-content: space-around;
+      }
+
+      .footer-enlaces a {
+        color: black;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .footer-enlaces a:hover {
+        text-decoration: underline;
+      }
+
   body
     nav
       .nav-container
@@ -24,10 +137,7 @@ html(lang="es")
       h1(style="text-align:center;padding:30px;") Blog de Populus
       .blog-container
         #app
-          div(v-for="post in posts" :key="post.titulo" class="post")
-            h2 {{ post.titulo }}
-            p {{ post.contenido }}
-            small {{ post.fecha }}
+          div(id="post-container")
 
     footer.footer-container
       .footer-enlaces
@@ -43,20 +153,13 @@ html(lang="es")
           p Email: a(href="mailto:populus@worldwide.net") populus@worldwide.net
           p Dirección: Calle Ficticia 123, 08001 Barcelona, España
 
-    script(type="module").
+    script(type="module"). 
       import { Blog } from './Blog.js';
       import { Post } from './Post.js';
+      import { renderPosts } from './postManager.js';
 
       const blog = new Blog();
       blog.agregarPost(new Post("Post 1", "Contenido del primer post", "2025-04-14"));
       blog.agregarPost(new Post("Post 2", "Contenido del segundo post", "2025-04-13"));
 
-      const { createApp } = Vue;
-
-      createApp({
-        data() {
-          return {
-            posts: blog.obtenerPosts()
-          };
-        }
-      }).mount('#app');
+      renderPosts(blog);
