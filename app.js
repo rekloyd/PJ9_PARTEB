@@ -91,7 +91,6 @@ const paginasEstaticas = [
   'about',
   'cookies',
   'terminos',
-  'graficas2',
   'admin'
 ];
 
