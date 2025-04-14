@@ -91,6 +91,7 @@ const paginasEstaticas = [
   'about',
   'cookies',
   'terminos',
+  'blog',
   'admin'
 ];
 

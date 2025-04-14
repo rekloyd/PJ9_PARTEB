@@ -1,0 +1,62 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Blog
+    link(rel="stylesheet", href="./styles.css")
+    script(src="https://unpkg.com/vue@3/dist/vue.global.js")
+  body
+    nav
+      .nav-container
+        a(href="/inicio")
+          img(src="../img/logo-nav.png", alt="Logo")
+        ul.nav-enlaces
+          li: a(href="/inicio") Gráfico
+          li: a(href="/quizz") Quizz
+          li: a(style="color: blue;" href="#") Blog
+          li: a(href="/about") Sobre Nosotros
+          li: a(href="/contacto") Contacto
+        .logout
+          a(href="/auth/logout") Log out
+
+    .main-container
+      h1(style="text-align:center;padding:30px;") Blog de Populus
+      .blog-container
+        #app
+          div(v-for="post in posts" :key="post.titulo" class="post")
+            h2 {{ post.titulo }}
+            p {{ post.contenido }}
+            small {{ post.fecha }}
+
+    footer.footer-container
+      .footer-enlaces
+        p &copy; Todos los derechos reservados a Populus 2024
+        .footer-enlaces
+          a(href="/inicio") Inicio
+          a(href="/politica_cookies") Política de Cookies
+          a(href="/terminos.html") Términos y Condiciones
+          a(href="/contacto") Contacto
+          a(href="/sobrenosotros") Sobre Nosotros
+        .footer-info
+          p Teléfono: +34 123 456 789
+          p Email: a(href="mailto:populus@worldwide.net") populus@worldwide.net
+          p Dirección: Calle Ficticia 123, 08001 Barcelona, España
+
+    script(type="module").
+      import { Blog } from './Blog.js';
+      import { Post } from './Post.js';
+
+      const blog = new Blog();
+      blog.agregarPost(new Post("Post 1", "Contenido del primer post", "2025-04-14"));
+      blog.agregarPost(new Post("Post 2", "Contenido del segundo post", "2025-04-13"));
+
+      const { createApp } = Vue;
+
+      createApp({
+        data() {
+          return {
+            posts: blog.obtenerPosts()
+          };
+        }
+      }).mount('#app');
