@@ -1,0 +1,181 @@
+doctype html
+html
+  head
+    title Quizz de Población
+    script(src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js")
+    link(rel="stylesheet" href="./styles.css")
+    style.
+      .drop-zone {
+        border: 2px dashed #ccc;
+        padding: 20px;
+        text-align: center;
+        min-height: 100px;
+      }
+
+      .respuesta {
+        margin: 5px;
+        padding: 10px;
+        background-color: #f4f4f4;
+        cursor: pointer;
+      }
+
+      .dragover {
+        background-color: #f0f0f0;
+      }
+
+      .correct {
+        color: green;
+      }
+
+      .incorrect {
+        color: red;
+      }
+
+      .buttons {
+        margin-top: 20px;
+      }
+
+      .boton--siguiente,
+      .boton--previo {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+  body
+    div(id="app")
+      nav
+        div(class="nav-container")
+          img(src="../img/logo-nav.png", alt="Logo")
+          ul(class="nav-enlaces")
+            li
+              a(href="/graficas") Gráfico
+            li
+              a.active(href="/quizz") Quizz
+            li
+              a(href="/blog") Blog
+            li
+              a(href="/about") Sobre Nosotros
+            li
+              a(href="/contacto") Contacto
+          div(class="logout")
+            a(href="/auth/logout") Log out
+
+      h1.text-center Comprobemos tu conocimiento sobre la población:
+
+      div.container--general
+        h1.quizz--titulo Cuestionario de conocimiento general:
+
+        div.container
+          div.column
+            br
+            p
+              strong {{ currentQuestion.pregunta }}
+            div(class="drop-zone" id="dropZone")
+              | Arrastra la respuesta aquí <br>⬇️
+          div.column
+            div(v-for="(respuesta, index) in currentQuestion.respuestas" :key="index")
+              div(class="respuesta"
+                  draggable="true"
+                  @dragstart="handleDragStart(respuesta)"
+                )
+                | {{ respuesta }}
+
+        div.buttons
+          button.boton--previo(
+            id="prev"
+            :disabled="currentQuestionIndex === 0"
+            @click="goToPreviousQuestion"
+          )
+            | &larr; Anterior
+          button.boton--siguiente(
+            id="next"
+            :disabled="isNextButtonDisabled"
+            @click="goToNextQuestion"
+          )
+            | Siguiente &rarr;
+          br
+          br
+
+        p#feedback.text-center {{ feedbackMessage }}
+        p#score.text-center Tu puntuación: {{ score }} de {{ preguntas.length }}
+
+        p.text-center
+          | ¿Quieres repetir este quizz? ¡Recarga la página y siéntete libre de repetirlo las veces que quieras!
+
+        footer.footer-container
+          div.footer-enlaces
+            p Copyright &copy; Todos los derechos reservados a Populus 2024
+            div.footer-enlaces
+              a(href="/graficas") Inicio
+              a(href="/cookies") Política de Cookies
+              a(href="/terminos") Términos y Condiciones
+              a(href="/contacto") Contacto
+              a(href="/about") Sobre Nosotros
+            div.footer-info
+              p Teléfono: +34 123 456 789
+              p Email: 
+                a(href="mailto:populus@worldwide.net") populus@worldwide.net
+              p Dirección: Calle Ficticia 123, 08001 Barcelona, España
+
+    script.
+      new Vue({
+        el: '#app',
+        data: {
+          currentQuestionIndex: 0,
+          score: 0,
+          feedbackMessage: '',
+          preguntas: [
+            { pregunta: '¿Qué país tiene la mayor tasa de natalidad en 2024?', respuestas: ['Níger', 'India', 'China'], correcta: 'Níger' },
+            { pregunta: '¿Qué país tiene la mayor cantidad de emigrantes viviendo en el extranjero?', respuestas: ['India', 'México', 'China'], correcta: 'India' },
+            { pregunta: '¿Qué continente tiene más habitantes?', respuestas: ['Asia', 'África', 'Europa'], correcta: 'Asia' },
+            { pregunta: '¿Cuál es el país con mayor densidad de población?', respuestas: ['Mónaco', 'Singapur', 'Bangladés'], correcta: 'Mónaco' },
+            { pregunta: '¿Cuál es la población aproximada de India en 2024?', respuestas: ['1.4 mil millones', '1.6 mil millones', '1.2 mil millones'], correcta: '1.4 mil millones' },
+            { pregunta: '¿Cuál es el principal motivo de migración global?', respuestas: ['Trabajo', 'Educación', 'Reunificación familiar'], correcta: 'Trabajo' },
+            { pregunta: '¿Qué país europeo tiene mayor porcentaje de inmigrantes?', respuestas: ['Alemania', 'Suiza', 'Francia'], correcta: 'Suiza' },
+            { pregunta: '¿Cuál es el continente con mayor tasa de emigración?', respuestas: ['África', 'Europa', 'Asia'], correcta: 'África' },
+            { pregunta: '¿Qué región del mundo tiene la tasa de crecimiento poblacional más alta?', respuestas: ['África Subsahariana', 'Sudeste Asiático', 'América Latina'], correcta: 'África Subsahariana' },
+            { pregunta: '¿Qué país tiene la mayor cantidad de refugiados?', respuestas: ['Turquía', 'Pakistán', 'Uganda'], correcta: 'Turquía' }
+          ]
+        },
+        computed: {
+          currentQuestion() {
+            return this.preguntas[this.currentQuestionIndex];
+          },
+          isNextButtonDisabled() {
+            return this.feedbackMessage === '';
+          }
+        },
+        methods: {
+          handleDragStart(respuesta) {
+            event.dataTransfer.setData('text/plain', respuesta);
+          },
+          goToNextQuestion() {
+            if (this.currentQuestionIndex < this.preguntas.length - 1) {
+              this.currentQuestionIndex++;
+            } else {
+              this.showFinalScore();
+            }
+          },
+          goToPreviousQuestion() {
+            if (this.currentQuestionIndex > 0) {
+              this.currentQuestionIndex--;
+            }
+          },
+          validateAnswer(droppedAnswer) {
+            const currentQuestion = this.currentQuestion;
+            if (droppedAnswer === currentQuestion.correcta) {
+              this.feedbackMessage = '¡Correcto!';
+              this.score++;
+            } else {
+              this.feedbackMessage = 'Incorrecto.';
+            }
+          },
+          showFinalScore() {
+            this.feedbackMessage = `Quiz completado! Tu puntuación final es ${this.score} de ${this.preguntas.length}`;
+          }
+        },
+        mounted() {
+          this.feedbackMessage = '';
+        }
+      });
