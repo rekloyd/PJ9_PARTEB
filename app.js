@@ -89,8 +89,6 @@ const paginasEstaticas = [
   'contacto',
   'graficas',
   'about',
-  'blogAdmin',
-  'blog',
   'cookies',
   'terminos',
   'admin'
@@ -102,7 +100,7 @@ paginasEstaticas.forEach((pagina) => {
       return res.status(403).send(`
         <script>
           alert("Acceso denegado: No tienes permisos de administrador");
-          window.location.href = "/";
+          window.location.href = "/inicio";
         </script>
       `);
     }

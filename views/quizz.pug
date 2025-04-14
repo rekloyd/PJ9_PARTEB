@@ -100,23 +100,6 @@ html
         text-align: center;
       }
 
-      footer.footer-container {
-        text-align: center;
-        margin-top: 50px;
-        font-size: 14px;
-        color: #777;
-      }
-
-      footer.footer-container a {
-        margin: 0 10px;
-        color: #4CAF50;
-        text-decoration: none;
-      }
-
-      footer.footer-container a:hover {
-        text-decoration: underline;
-      }
-
   body
     div(id="app")
       nav
@@ -126,9 +109,7 @@ html
             li
               a(href="/graficas") Gráfico
             li
-              a.active(href="/quizz") Quizz
-            li
-              a(href="/blog") Blog
+              a(style="color: blue;" href="/quizz") Quizz
             li
               a(href="/about") Sobre Nosotros
             li
@@ -180,20 +161,20 @@ html
         p.text-center
           | ¿Quieres repetir este quizz? ¡Recarga la página y siéntete libre de repetirlo las veces que quieras!
 
-        footer.footer-container
-          div.footer-enlaces
-            p Copyright &copy; Todos los derechos reservados a Populus 2024
-            div.footer-enlaces
-              a(href="/graficas") Inicio
-              a(href="/cookies") Política de Cookies
-              a(href="/terminos") Términos y Condiciones
-              a(href="/contacto") Contacto
-              a(href="/about") Sobre Nosotros
-            div.footer-info
-              p Teléfono: +34 123 456 789
-              p Email: 
-                a(href="mailto:populus@worldwide.net") populus@worldwide.net
-              p Dirección: Calle Ficticia 123, 08001 Barcelona, España
+    footer.footer-container
+      .footer-enlaces
+        p Copyright &copy; Todos los derechos reservados a Populus 2024
+        .footer-enlaces
+          a(href="/inicio") Inicio
+          a(href="/cookies") Política de Cookies
+          a(href="/terminos") Términos y Condiciones
+          a(href="/contacto") Contacto
+          a(href="/about", style="color: blue;") Sobre Nosotros
+      .footer-info
+        p Teléfono: +34 123 456 789
+        p Email: 
+          a(href="mailto:populus@worldwide.net") populus@worldwide.net
+        p Dirección: Calle Ficticia 123, 08001 Barcelona, España
 
     script.
       new Vue({
