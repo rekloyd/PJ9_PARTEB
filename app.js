@@ -76,10 +76,19 @@ function checkAuthentication(req, res, next) {
 }
 app.use(checkAuthentication);
 
+// Middleware global para proteger las rutas
+app.use((req, res, next) => {
+  const rutasPublicas = ['/', '/auth/login', '/auth/logout'];
+  if (!req.username && !rutasPublicas.includes(req.path)) {
+    return res.redirect('/');
+  }
+  next();
+});
+
 // Rutas principales con vistas pug
 app.get('/', (req, res) => {
   if (req.username) {
-    return res.redirect('/');
+    return res.redirect('/inicio');
   }
   return res.render('index');
 });
@@ -244,8 +253,7 @@ https.createServer(options, app).listen(PORT, () => {
   console.log(`Servidor HTTPS corriendo en https://localhost:${PORT}`);
 });
 
-//Redirigir servidor HTTP => HTTPS
-
+// Redirigir servidor HTTP => HTTPS
 http.createServer((req, res) => {
   const host = req.headers.host.split(':')[0];
   res.writeHead(301, { "Location": `https://${host}${req.url}` });
