@@ -20,6 +20,41 @@ const options = {
   cert: fs.readFileSync('certs/cert.pem')
 };
 
+//Creación por defecto de "user" y "admin"
+
+async function createDefaultAdmin() {
+  try {
+    const existingUser = await User.findOne({ username: "admin" });
+    if (!existingUser) {
+      const newUser = new User({ username: "admin", password: "1234" });
+      await newUser.save();
+      console.log('Usuario por defecto "admin" creado con éxito');
+    } else {
+      console.log('El usuario "admin" ya existe');
+    }
+  } catch (error) {
+    console.error("Error al crear el usuario por defecto:", error);
+  }
+}
+
+async function createDefaultUser() {
+  try {
+    const existingUser = await User.findOne({ username: "user" });
+    if (!existingUser) {
+      const newUser = new User({ username: "user", password: "1234" });
+      await newUser.save();
+      console.log('Usuario por defecto "user" creado con éxito');
+    } else {
+      console.log('El usuario "user" ya existe');
+    }
+  } catch (error) {
+    console.error("Error al crear el usuario por defecto:", error);
+  }
+}
+
+createDefaultUser();
+createDefaultAdmin();
+
 // Middleware para servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
