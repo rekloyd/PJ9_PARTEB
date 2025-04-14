@@ -89,8 +89,6 @@ const paginasEstaticas = [
   'contacto',
   'graficas',
   'about',
-  'blogAdmin',
-  'blog',
   'cookies',
   'terminos',
   'admin'
