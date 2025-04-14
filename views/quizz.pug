@@ -5,11 +5,35 @@ html
     script(src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js")
     link(rel="stylesheet" href="./styles.css")
     style.
-      .drop-zone {
-        border: 2px dashed #ccc;
+      body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f8f8;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container--general {
+        max-width: 1200px;
+        margin: 50px auto;
         padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .drop-zone {
+        border: 2px dashed #4CAF50;
+        padding: 40px;
         text-align: center;
-        min-height: 100px;
+        min-height: 150px;
+        margin-bottom: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      .drop-zone:hover {
+        background-color: #e7f7e7;
       }
 
       .respuesta {
@@ -17,6 +41,13 @@ html
         padding: 10px;
         background-color: #f4f4f4;
         cursor: pointer;
+        border-radius: 5px;
+        text-align: center;
+        transition: background-color 0.3s;
+      }
+
+      .respuesta:hover {
+        background-color: #ddd;
       }
 
       .dragover {
@@ -32,14 +63,58 @@ html
       }
 
       .buttons {
-        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
       }
 
       .boton--siguiente,
       .boton--previo {
-        padding: 10px 20px;
+        padding: 12px 25px;
         font-size: 16px;
         cursor: pointer;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+
+      .boton--siguiente:disabled,
+      .boton--previo:disabled {
+        background-color: #ddd;
+        cursor: not-allowed;
+      }
+
+      .boton--siguiente:hover,
+      .boton--previo:hover {
+        background-color: #45a049;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+
+      .text-center {
+        text-align: center;
+      }
+
+      footer.footer-container {
+        text-align: center;
+        margin-top: 50px;
+        font-size: 14px;
+        color: #777;
+      }
+
+      footer.footer-container a {
+        margin: 0 10px;
+        color: #4CAF50;
+        text-decoration: none;
+      }
+
+      footer.footer-container a:hover {
+        text-decoration: underline;
       }
 
   body
@@ -71,13 +146,15 @@ html
             br
             p
               strong {{ currentQuestion.pregunta }}
-            div(class="drop-zone" id="dropZone")
+            div(class="drop-zone" id="dropZone"
+                @dragover.prevent
+                @drop="handleDrop")
               | Arrastra la respuesta aquí <br>⬇️
           div.column
             div(v-for="(respuesta, index) in currentQuestion.respuestas" :key="index")
               div(class="respuesta"
                   draggable="true"
-                  @dragstart="handleDragStart(respuesta)"
+                  @dragstart="handleDragStart($event, respuesta)"
                 )
                 | {{ respuesta }}
 
@@ -147,12 +224,17 @@ html
           }
         },
         methods: {
-          handleDragStart(respuesta) {
-            event.dataTransfer.setData('text/plain', respuesta);
+          handleDragStart(event, respuesta) {
+            event.dataTransfer.setData('respuesta', respuesta);
+          },
+          handleDrop(event) {
+            const respuesta = event.dataTransfer.getData('respuesta');
+            this.validateAnswer(respuesta);
           },
           goToNextQuestion() {
             if (this.currentQuestionIndex < this.preguntas.length - 1) {
               this.currentQuestionIndex++;
+              this.feedbackMessage = '';
             } else {
               this.showFinalScore();
             }
@@ -160,6 +242,7 @@ html
           goToPreviousQuestion() {
             if (this.currentQuestionIndex > 0) {
               this.currentQuestionIndex--;
+              this.feedbackMessage = '';
             }
           },
           validateAnswer(droppedAnswer) {
@@ -172,7 +255,7 @@ html
             }
           },
           showFinalScore() {
-            this.feedbackMessage = `Quiz completado! Tu puntuación final es ${this.score} de ${this.preguntas.length}`;
+            this.feedbackMessage = `¡Quiz completado! Tu puntuación final es ${this.score} de ${this.preguntas.length}`;
           }
         },
         mounted() {
