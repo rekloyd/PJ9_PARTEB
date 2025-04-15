@@ -2,9 +2,53 @@ html
   head
     title Gráficos con Vue + Canvas
     script(src="https://unpkg.com/vue@3")
+    link(rel="stylesheet", href="./styles.css")
     style.
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+      }
+      .contenedor {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .titulo {
+        text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+      }
+      .botonera {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+      .btn {
+        padding: 10px 20px;
+        font-size: 14px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      .btn:hover {
+        background-color: #2980b9;
+      }
       .grafico-container {
         margin-top: 20px;
+        text-align: center;
+      }
+      canvas {
+        border: 1px solid #ccc;
+        background-color: white;
       }
       #mapaTooltip {
         z-index: 1000;
@@ -12,11 +56,28 @@ html
       }
 
   body
-    div#app
-      button(@click="mostrarGrafico('graficoBarras')") Gráfico de Barras
-      button(@click="mostrarGrafico('graficoProgresion')") Gráfico de Progresión
-      button(@click="mostrarGrafico('graficoPastel')") Gráfico de Pastel
-      button(@click="mostrarGrafico('mapa')") Mapa
+    nav
+      .nav-container
+        a(href="/inicio")
+          img(src="../img/logo-nav.png", alt="Logo")
+        ul.nav-enlaces
+          li
+            a(href="/inicio") Gráfico
+          li
+            a(href="/quizz") Quizz
+          li
+            a(href="/about") Sobre Nosotros
+          li
+            a(href="/contacto") Contacto
+        .logout
+          a(href="/auth/logout") Log out
+
+    div#app.contenedor
+      h1.titulo Gráficos de población
+      div.botonera
+        button.btn(@click="mostrarGrafico('graficoBarras')") Gráfico de Barras
+        button.btn(@click="mostrarGrafico('graficoProgresion')") Gráfico de Progresión
+        button.btn(@click="mostrarGrafico('graficoPastel')") Gráfico de Pastel
 
       div#graficoBarras.grafico-container(style="display: none;")
         canvas#canvasBarras(width="500", height="400")
@@ -32,6 +93,21 @@ html
 
       div#mapaTooltip(v-if="isTooltipVisible", :style="tooltipStyle")
         div(v-html="tooltipContent")
+
+    footer.footer-container
+      .footer-enlaces
+        p Copyright &copy; Todos los derechos reservados a Populus 2024
+        .footer-enlaces
+          a(href="/inicio") Inicio
+          a(href="/politica_cookies", style="color: blue;") Política de Cookies
+          a(href="/terminos") Términos y Condiciones
+          a(href="/contacto") Contacto
+          a(href="/about") Sobre Nosotros
+      .footer-info
+        p Teléfono: +34 123 456 789
+        p Email: 
+          a(href="mailto:populus@worldwide.net") populus@worldwide.net
+        p Dirección: Calle Ficticia 123, 08001 Barcelona, España
 
     script.
       const { createApp } = Vue;
@@ -63,7 +139,6 @@ html
             if (id === 'graficoBarras') this.generarGraficoBarras();
             if (id === 'graficoProgresion') this.generarGraficoProgresion();
             if (id === 'graficoPastel') this.generarGraficoPastel();
-            if (id === 'mapa') this.mostrarMapa();
           },
 
           iniciarGraficos() {
@@ -150,35 +225,17 @@ html
             ctx.beginPath();
             ctx.moveTo(xStart, yStart - (data[0].population - 8000) * yScale);
             data.forEach((point, index) => {
-              const xPos = xStart + index * xGap;
-              const yPos = yStart - (point.population - 8000) * yScale;
-              ctx.lineTo(xPos, yPos);
+              const x = xStart + index * xGap;
+              const y = yStart - (point.population - 8000) * yScale;
+              ctx.lineTo(x, y);
             });
-
             ctx.strokeStyle = "#FF5733";
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 2;
             ctx.stroke();
-
-            ctx.fillStyle = "#FF5733";
-            data.forEach((point, index) => {
-              const xPos = xStart + index * xGap;
-              const yPos = yStart - (point.population - 8000) * yScale;
-              ctx.beginPath();
-              ctx.arc(xPos, yPos, 5, 0, 2 * Math.PI);
-              ctx.fill();
-            });
           },
 
           generarGraficoPastel() {
-            const canvas = document.getElementById("canvasPastel");
-            const ctx = canvas.getContext("2d");
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            const centroX = canvas.width / 2;
-            const centroY = canvas.height / 2;
-            const radio = 150;
-
-            const datos = [
+            const datosPastel = [
               { pais: "India", porcentaje: 18.29 },
               { pais: "China", porcentaje: 17.87 },
               { pais: "EEUU", porcentaje: 4.27 },
@@ -191,38 +248,48 @@ html
               { pais: "México", porcentaje: 1.68 },
             ];
 
-            const colores = [
-              "#FF5733", "#33FF57", "#5733FF", "#FFC300", "#33FFF0",
-              "#FF33E0", "#8E44AD", "#3498DB", "#F1C40F", "#E67E22"
+            const coloresPastel = [
+              "#FF5733", "#33FF57", "#5733FF", "#FFC300", 
+              "#33FFF0", "#FF33E0", "#8E44AD", "#3498DB", 
+              "#F1C40F", "#E67E22"
             ];
 
-            const total = datos.reduce((sum, d) => sum + d.porcentaje, 0);
+            const canvasPastel = document.getElementById("canvasPastel");
+            const ctxPastel = canvasPastel.getContext("2d");
+            const centroX = canvasPastel.width / 2;
+            const centroY = canvasPastel.height / 2;
+            const radio = 150;
+
+            const totalOriginal = datosPastel.reduce((sum, dato) => sum + dato.porcentaje, 0);
+            const factorEscala = 100 / totalOriginal;
+
+            const datosEscalados = datosPastel.map(dato => ({
+              ...dato,
+              porcentaje: dato.porcentaje * factorEscala,
+            }));
+
             let anguloInicio = 0;
+            datosEscalados.forEach((dato, index) => {
+              const anguloFin = anguloInicio + (dato.porcentaje / 100) * 2 * Math.PI;
 
-            datos.forEach((dato, index) => {
-              const angulo = (dato.porcentaje / total) * 2 * Math.PI;
-              ctx.beginPath();
-              ctx.moveTo(centroX, centroY);
-              ctx.arc(centroX, centroY, radio, anguloInicio, anguloInicio + angulo);
-              ctx.closePath();
-              ctx.fillStyle = colores[index];
-              ctx.fill();
+              ctxPastel.beginPath();
+              ctxPastel.moveTo(centroX, centroY);
+              ctxPastel.arc(centroX, centroY, radio, anguloInicio, anguloFin);
+              ctxPastel.closePath();
+              ctxPastel.fillStyle = coloresPastel[index];
+              ctxPastel.fill();
 
-              anguloInicio += angulo;
+              const anguloMedio = (anguloInicio + anguloFin) / 2;
+              const etiquetaX = centroX + (radio + 20) * Math.cos(anguloMedio);
+              const etiquetaY = centroY + (radio + 20) * Math.sin(anguloMedio);
+
+              ctxPastel.fillStyle = "#000";
+              ctxPastel.font = "14px Arial";
+              ctxPastel.textAlign = "center";
+              ctxPastel.fillText(dato.pais, etiquetaX, etiquetaY);
+
+              anguloInicio = anguloFin;
             });
-          },
-
-          mostrarMapa() {
-            const canvas = document.getElementById("canvas");
-            const ctx = canvas.getContext("2d");
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = "#e0e0e0";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = "#333";
-            ctx.font = "20px Arial";
-            ctx.fillText("Aquí se mostraría un mapa o algo representativo", 300, 300);
           }
         }
-      }).mount("#app");
+      }).mount('#app')
