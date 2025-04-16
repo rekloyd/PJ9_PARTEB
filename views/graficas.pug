@@ -46,14 +46,26 @@ html
         margin-top: 20px;
         text-align: center;
       }
-      canvas {
-        border: 1px solid #ccc;
-        background-color: white;
-      }
+      
       #mapaTooltip {
         z-index: 1000;
         pointer-events: none;
       }
+      .texto-grafico {
+      max-width: 400px;
+      font-size: 16px;
+      text-align: left;
+      color: #333;
+      }
+      .flex-display {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      }
+
+    
+
 
   body
     nav
@@ -80,13 +92,65 @@ html
         button.btn(@click="mostrarGrafico('graficoPastel')") Gráfico de Pastel
 
       div#graficoBarras.grafico-container(style="display: none;")
-        canvas#canvasBarras(width="500", height="400")
+        div.flex-display
+          canvas#canvasBarras(width="500", height="400")
+          p.texto-grafico
+            b 2000 a.C:
+            |  Época del Imperio Egipcio
+            br
+            b 100 a.C:
+            |  Plenitud y apogeo del Imperio Romano
+            br
+            b 711:
+            |  Invasión Árabe de la Península
+            br
+            b 1492:
+            |  Conquista de América
+            br
+            b 1789:
+            |  Revolución Francesa
+            br
+            b 1850:
+            |  Revolución Industrial
+            br
+            b 1960:
+            |  Época del Baby Boom y aumenta masivamente los nacimientos a la vez que aumenta la esperanza de vida mundial
+            br
+            b 2010:
+            |  La población crece a pasos agigantados pero a menos ritmo que los años anteriores debido a que en los países desarrollados baja la natalidad, pero en los países en vías de desarrollo aumenta la natalidad y sobretodo la esperanza de vida debido al acceso a una buena medicina
 
       div#graficoProgresion.grafico-container(style="display: none;")
-        canvas#canvasProgresion(width="500", height="400")
+        div.flex-display(style="display: flex; align-items: flex-start; justify-content: flex-start;")
+          canvas#canvasProgresion(width="500", height="400")
+          p.texto-grafico(style="margin-left: 20px; font-size: 12px;")  
+            p
+              | En los próximos 56 años la población seguirá creciendo pero a un nivel más lento que al de los últimos años. El motivo principal es la muy baja natalidad (incluso negativa en algunos países desarrollados). El motivo por el cual sigue creciendo la población exponencialmente, es debido a la gran natalidad de los países subdesarrollados y al aumento constante de la esperanza de vida mundial.
 
       div#graficoPastel.grafico-container(style="display: none;")
-        canvas#canvasPastel(width="500", height="400")
+        div.flex-display(style="display: flex; align-items: flex-start; justify-content: flex-start;")
+          canvas#canvasPastel(width="500", height="400")
+          p.texto-grafico(style="margin-left: 20px; font-size: 1px; transform: rotate(90deg); white-space: nowrap")  
+            //- p Los 10 países más poblados del mundo:
+            //- b 1. India: 1442 millones de habitantes
+            //- br
+            //- b 2. China: 1409 millones de habitantes
+            //- br
+            //- b 3. EEUU: 337 millones de habitantes
+            //- br
+            //- b 4. Indonesia: 282 millones de habitantes
+            //- br
+            //- b 5. Pakistán: 236 millones de habitantes
+            //- br
+            //- b 6. Nigeria: 228 millones de habitantes
+            //- br
+            //- b 7. Brasil: 213 millones de habitantes
+            //- br
+            //- b 8. Bangladesh: 172 millones de habitantes
+            //- br
+            //- b 9. Rusia: 146 millones de habitantes
+            //- br
+            //- b 10. México: 132 millones de habitantes
+
 
       div#mapa.grafico-container(style="display: none;")
         canvas#canvas(width="1000", height="600")
@@ -117,6 +181,7 @@ html
           return {
             isTooltipVisible: false,
             tooltipContent: '',
+            textoGrafico: '',
             tooltipStyle: {
               position: 'absolute',
               background: 'white',
@@ -135,10 +200,18 @@ html
             contenedores.forEach((contenedor) => {
               contenedor.style.display = contenedor.id === id ? 'block' : 'none';
             });
-
-            if (id === 'graficoBarras') this.generarGraficoBarras();
-            if (id === 'graficoProgresion') this.generarGraficoProgresion();
-            if (id === 'graficoPastel') this.generarGraficoPastel();
+            if (id === 'graficoBarras') {
+              this.textoGrafico = '2000 a.C:</b> Época del Imperio Egipcio<br><b>100 a.C:</b> Plenitud y apogeo del Imperio Romano<br><b>711:</b> Invasión Árabe de la Península<br><b>1492:</b> Conquista de América<br><b>1789:</b> Revolución Francesa<br><b>1850:</b> Revolución Industrial<br><b>1960:</b>Época del Baby Boom y aumenta masivamente los nacimientos a la vez que aumenta la esperanza de vida mundial<br><b>2010:</b>La población crece a pasos agigantados pero a menos ritmo que los años anteriores debido a que en los países desarrollados baja la natalidad, pero en los países en vías de desarrollo aumenta la natalidad y sobretodo la esperanza de vida debido al acceso a una buena medicina';
+              this.generarGraficoBarras();
+            } else if (id === 'graficoProgresion') {
+              this.textoGrafico = 'El gráfico de progresión muestra la proyección del crecimiento poblacional desde el año 2024 hasta el 2080.';
+              this.generarGraficoProgresion();
+            } else if (id === 'graficoPastel') {
+              this.textoGrafico = 'Este gráfico de pastel indica el porcentaje de la población mundial correspondiente a los países más poblados.';
+              this.generarGraficoPastel();
+            } else {
+              this.textoGrafico = '';
+            }
           },
 
           iniciarGraficos() {
