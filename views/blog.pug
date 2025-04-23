@@ -157,10 +157,11 @@ html(lang="es")
     script(type="module"). 
       import { Blog } from './Blog.js';
       import { Post } from './Post.js';
+      import {PostDestacado} from './PostDestacado.js';
       import { renderPosts } from './postManager.js';
 
       const blog = new Blog();
       blog.agregarPost(new Post("Post 1", "Contenido del primer post", "2025-04-14"));
-      blog.agregarPost(new Post("Post 2", "Contenido del segundo post", "2025-04-13"));
+      blog.agregarPost(new PostDestacado("Post 2", "Contenido del segundo post", "2025-04-13","David Li"));
 
       renderPosts(blog);
